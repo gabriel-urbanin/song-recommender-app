@@ -21,16 +21,30 @@
             e.preventDefault();
             const songs = document.getElementById('songs').value;
             const songList = songs.split(',').map(song => song.trim());
-            const response = await fetch('/api/recommend', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ songs: songList })
-            });
-            const data = await response.json();
-            
-            const recommendedSongs = "You should listen to: ".concat(data.songs.join(', '))
-            const emptyRecommendation = "Unfortunately, there are no recommendations for these songs :("
-            document.getElementById('recommendations').textContent = data.songs && data.songs.length > 0 ? recommendedSongs : emptyRecommendation;
+    
+            try {
+                const response = await fetch('/api/recommend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ songs: songList })
+                });
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    document.getElementById('recommendations').textContent = 
+                        `Error: ${errorData.error || 'Something went wrong with the request.'}`;
+                } else {
+                    const data = await response.json();
+    
+                    const recommendedSongs = "You should listen to: ".concat(data.songs.join(', '));
+                    const emptyRecommendation = "Unfortunately, there are no recommendations for these songs :(";
+                    document.getElementById('recommendations').textContent = 
+                        data.songs && data.songs.length > 0 ? recommendedSongs : emptyRecommendation;
+                }
+            } catch (error) {
+                document.getElementById('recommendations').textContent = 
+                    "An unexpected error occurred. Please try again later.";
+            }
         });
     </script>
 </body>

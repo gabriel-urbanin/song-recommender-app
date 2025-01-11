@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from model_loader import load_model, watch_model
-import logging
+import logging, os
 
 def create_app():
     app = Flask(__name__)
@@ -11,6 +11,10 @@ def create_app():
     @app.before_request
     def check_for_model_updates():
         watch_model(app)
+    
+    @app.route('/favicon.ico')
+    def favicon():
+        return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico')
 
     @app.route('/', methods=['GET'])
     def index():
