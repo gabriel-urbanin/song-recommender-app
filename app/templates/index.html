@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Spotify Song Recommender</h1>
+    <form id="recommendationForm">
+        <label for="songs">Please, enter one or more songs you enjoy so we can recommend you new ones you might like </label>
+        <input type="text" id="songs" placeholder="Enter song names separated by commas" name="songs" required>
+        <button type="submit">Recommend</button>
+    </form>
+
+    <p id="recommendations"></p>
+
+    <script>
+        document.getElementById('recommendationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const songs = document.getElementById('songs').value;
+            const songList = songs.split(',').map(song => song.trim());
+            const response = await fetch('/api/recommend', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ songs: songList })
+            });
+            const data = await response.json();
+            
+            const recommendedSongs = "You should listen to: ".concat(data.songs.join(', '))
+            const emptyRecommendation = "Unfortunately, there are no recommendations for these songs :("
+            document.getElementById('recommendations').textContent = data.songs && data.songs.length > 0 ? recommendedSongs : emptyRecommendation;
+        });
+    </script>
+</body>
+</html>
