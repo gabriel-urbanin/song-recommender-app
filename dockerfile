@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64 python:3.9-slim-bullseye as build
+FROM --platform=linux/amd64 python:3.9-slim-bullseye as build
 
 WORKDIR /app
 
