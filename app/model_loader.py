@@ -2,7 +2,7 @@ import os
 import pickle
 from time import sleep
 
-VOLUME_PATH = '/app/model/spotify_recommendations.pkl'
+VOLUME_PATH = '/app/model/song_recommendations.pkl'
 
 def load_model(app):
     try:
