@@ -35,7 +35,7 @@ def create_app():
             else:
                 recommendations.update(app.model[song])
 
-        return jsonify({"songs": recommendations}), 200
+        return jsonify({"songs": list(recommendations)}), 200
 
     return app
 
