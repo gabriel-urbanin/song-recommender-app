@@ -27,10 +27,13 @@ def create_app():
         
         input_data = request.get_json(force=True)
         songs = input_data.get('songs', [])
-        recommendations = []
+        recommendations = set()
 
         for song in songs:
-            recommendations.extend(app.model[song])
+            if song not in app.model:
+                recommendations.update(app.model['default_recommendation'])
+            else:
+                recommendations.update(app.model[song])
 
         return jsonify({"songs": recommendations}), 200
 
